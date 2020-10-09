@@ -1,0 +1,61 @@
+plugins {
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'net.minecrell.plugin-yml.bukkit' version '0.3.0'
+}
+
+group 'dev.fadest'
+version '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+bukkit {
+    main = 'dev.fadest.pit.ThePit'
+    description = "Self-made implementation of Hypixel's ThePit gamemode"
+    author = 'Fadest'
+    website = 'https://fadest.dev'
+
+    commands {
+        pit {
+            aliases = ['thepit']
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'spigot-repo'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name 'md-5-repo'
+        url 'https://repo.md-5.net/content/repositories/snapshots/'
+    }
+    maven {
+        name 'sonatype-repo'
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+
+dependencies {
+    api group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
+
+    implementation group: 'org.spigotmc', name: 'spigot-api', version: '1.8.8-R0.1-SNAPSHOT'
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.12'
+}
+
+shadowJar {
+    project.configurations.api.canBeResolved = true
+    configurations = [project.configurations.api]
+}
+build.dependsOn shadowJar
